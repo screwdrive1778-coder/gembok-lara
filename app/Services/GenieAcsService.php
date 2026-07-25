@@ -11,6 +11,9 @@ class GenieAcsService
     protected $baseUrl;
     protected $username;
     protected $password;
+    protected $timeout;
+    protected $retryTimes;
+    protected $retrySleep;
 
     public function __construct()
     {
@@ -27,13 +30,29 @@ class GenieAcsService
             $this->username = config('services.genieacs.username');
             $this->password = config('services.genieacs.password');
         }
+
+        $this->baseUrl = rtrim((string) $this->baseUrl, '/');
+        $this->timeout = (int) config('services.genieacs.timeout', 10);
+        $this->retryTimes = (int) config('services.genieacs.retry_times', 2);
+        $this->retrySleep = (int) config('services.genieacs.retry_sleep', 250);
     }
 
     protected function request($method, $endpoint, $data = [])
     {
+        if (!$this->isConfigured()) {
+            Log::warning('GenieACS request skipped because the base URL is not configured', [
+                'endpoint' => $endpoint,
+            ]);
+
+            return null;
+        }
+
         try {
-            $response = Http::withBasicAuth($this->username, $this->password)
-                ->withHeaders(['Content-Type' => 'application/json'])
+            $response = Http::acceptJson()
+                ->asJson()
+                ->withBasicAuth((string) $this->username, (string) $this->password)
+                ->timeout(max(1, $this->timeout))
+                ->retry(max(0, $this->retryTimes), max(0, $this->retrySleep), throw: false)
                 ->$method($this->baseUrl . $endpoint, $data);
 
             if ($response->successful()) {
@@ -43,14 +62,24 @@ class GenieAcsService
             Log::error('GenieACS request failed', [
                 'endpoint' => $endpoint,
                 'status' => $response->status(),
-                'body' => $response->body()
+                'response_preview' => str($response->body())->limit(500)->toString(),
             ]);
 
             return null;
-        } catch (\Exception $e) {
-            Log::error('GenieACS request exception: ' . $e->getMessage());
+        } catch (\Throwable $e) {
+            Log::error('GenieACS request exception', [
+                'endpoint' => $endpoint,
+                'message' => $e->getMessage(),
+            ]);
+
             return null;
         }
+    }
+
+    protected function isConfigured(): bool
+    {
+        return filled($this->baseUrl)
+            && filter_var($this->baseUrl, FILTER_VALIDATE_URL) !== false;
     }
 
     // ==================== Device Management ====================

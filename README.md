@@ -1,4 +1,4 @@
-# 🔐 GEMBOK LARA - ISP Billing & Management System
+# 🔐 MyShezaNet - ISP Billing & Management System
 
 ![Laravel](https://img.shields.io/badge/Laravel-12.x-FF2D20?style=for-the-badge&logo=laravel)
 ![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=for-the-badge&logo=tailwind-css)
@@ -6,7 +6,7 @@
 ![Chart.js](https://img.shields.io/badge/Chart.js-4.x-FF6384?style=for-the-badge&logo=chartdotjs)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?style=for-the-badge&logo=github-actions)
 
-**GEMBOK LARA** adalah sistem manajemen tagihan dan operasional ISP (Internet Service Provider) yang dibangun menggunakan **Laravel 12**. Sistem ini dirancang dengan antarmuka modern, analitik mendalam, dan fitur lengkap untuk mengelola bisnis ISP Anda.
+**MyShezaNet** adalah sistem manajemen tagihan dan operasional ISP (Internet Service Provider) yang dibangun menggunakan **Laravel 12**. Sistem ini dirancang dengan antarmuka modern, analitik mendalam, dan fitur lengkap untuk mengelola bisnis ISP Anda.
 
 🌐 **Demo**: [https://isp.digitalkanaku.com/](https://isp.digitalkanaku.com/)
 
@@ -266,7 +266,7 @@ Akses aplikasi di: `http://localhost:8000`
 
 ## 🔑 Akun Demo & Portal Akses
 
-Sistem Gembok Lara memiliki beberapa portal terpisah untuk peran yang berbeda. Berikut adalah URL login beserta akun demo untuk masing-masing portal:
+Sistem MyShezaNet memiliki beberapa portal terpisah untuk peran yang berbeda. Berikut adalah URL login beserta akun demo untuk masing-masing portal:
 
 | Portal | URL Login | Email/Username | Password | Fungsi Utama |
 |--------|-----------|----------------|----------|--------------|
@@ -330,7 +330,7 @@ gembok-lara/
 
 ## 🔒 Keamanan
 
-GEMBOK LARA dibangun dengan standar keamanan Laravel:
+MyShezaNet dibangun dengan standar keamanan Laravel:
 
 - ✅ **Authentication** - Session-based dengan Bcrypt hashing
 - ✅ **CSRF Protection** - Token pada semua form
@@ -552,7 +552,7 @@ Terima kasih kepada:
 ---
 
 <div align="center">
-  <strong>GEMBOK LARA</strong> - <em>Simplifying ISP Management</em>
+  <strong>MyShezaNet</strong> - <em>Simplifying ISP Management</em>
   <br><br>
   Made with ❤️ using Laravel & Tailwind CSS
 </div>

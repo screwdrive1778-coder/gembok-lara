@@ -27,7 +27,7 @@ if (!function_exists('companyName')) {
      */
     function companyName()
     {
-        return appSetting('company_name', 'GEMBOK LARA');
+        return appSetting('company_name', 'MyShezaNet');
     }
 }
 

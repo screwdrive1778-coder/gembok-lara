@@ -373,7 +373,7 @@ class IntegrationSettingController extends Controller
             ]);
 
             $ch = curl_init();
-            $message = '🔔 Test koneksi dari GEMBOK LARA - ' . now()->format('d/m/Y H:i:s');
+            $message = '🔔 Test koneksi dari MyShezaNet - ' . now()->format('d/m/Y H:i:s');
             
             // Different format for different providers
             if (str_contains($apiUrl, 'wablas')) {

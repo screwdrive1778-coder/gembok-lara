@@ -1,5 +1,5 @@
 <!-- Top Bar -->
-<div class="sticky top-0 z-40 bg-white shadow-md">
+<div class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-lime-200/70 shadow-sm">
     <div class="flex items-center justify-between h-16 px-6">
         <!-- Mobile Menu Button -->
         <button @click="sidebarOpen = !sidebarOpen" class="lg:hidden text-gray-600 hover:text-gray-900">
@@ -23,10 +23,10 @@
                     <i class="fas fa-chevron-down text-xs"></i>
                 </button>
                 <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-32 bg-white rounded-lg shadow-lg border z-50">
-                    <a href="{{ route('language.switch', 'en') }}" class="flex items-center px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'en' ? 'text-cyan-600 font-medium' : 'text-gray-700' }}">
+                    <a href="{{ route('language.switch', 'en') }}" class="flex items-center px-4 py-2 text-sm hover:bg-lime-50 {{ app()->getLocale() == 'en' ? 'text-green-600 font-medium' : 'text-gray-700' }}">
                         <span class="mr-2">🇺🇸</span> English
                     </a>
-                    <a href="{{ route('language.switch', 'id') }}" class="flex items-center px-4 py-2 text-sm hover:bg-gray-50 {{ app()->getLocale() == 'id' ? 'text-cyan-600 font-medium' : 'text-gray-700' }}">
+                    <a href="{{ route('language.switch', 'id') }}" class="flex items-center px-4 py-2 text-sm hover:bg-lime-50 {{ app()->getLocale() == 'id' ? 'text-green-600 font-medium' : 'text-gray-700' }}">
                         <span class="mr-2">🇮🇩</span> Indonesia
                     </a>
                 </div>
@@ -39,7 +39,7 @@
                         <p class="text-sm font-medium text-gray-900">{{ auth()->user()->name }}</p>
                         <p class="text-xs text-gray-500">Administrator</p>
                     </div>
-                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white font-bold shadow">
+                    <div class="h-10 w-10 rounded-full sheza-gradient flex items-center justify-center text-white font-bold shadow shadow-lime-500/30">
                         <i class="fas fa-user-shield"></i>
                     </div>
                     <i class="fas fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
