@@ -54,6 +54,9 @@ return [
         'url' => env('GENIEACS_URL', 'http://localhost:7557'),
         'username' => env('GENIEACS_USERNAME', ''),
         'password' => env('GENIEACS_PASSWORD', ''),
+        'timeout' => (int) env('GENIEACS_TIMEOUT', 10),
+        'retry_times' => (int) env('GENIEACS_RETRY_TIMES', 2),
+        'retry_sleep' => (int) env('GENIEACS_RETRY_SLEEP', 250),
     ],
 
     'whatsapp' => [

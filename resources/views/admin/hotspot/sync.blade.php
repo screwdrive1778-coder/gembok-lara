@@ -37,11 +37,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                         <label class="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-cyan-500">
                             <input type="radio" name="direction" value="pull" checked class="mr-3"> 
-                            <div><p class="font-medium">⬇️ Pull</p><p class="text-xs text-gray-500">Mikrotik → Gembok</p></div>
+                            <div><p class="font-medium">⬇️ Pull</p><p class="text-xs text-gray-500">Mikrotik → MyShezaNet</p></div>
                         </label>
                         <label class="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-cyan-500">
                             <input type="radio" name="direction" value="push" class="mr-3">
-                            <div><p class="font-medium">⬆️ Push</p><p class="text-xs text-gray-500">Gembok → Mikrotik</p></div>
+                            <div><p class="font-medium">⬆️ Push</p><p class="text-xs text-gray-500">MyShezaNet → Mikrotik</p></div>
                         </label>
                         <label class="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-cyan-500">
                             <input type="radio" name="direction" value="full" class="mr-3">

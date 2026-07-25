@@ -39,7 +39,7 @@ class MikrotikSyncController extends Controller
         $hotspotUsers = $this->mikrotik->getHotspotUsers();
         $hotspotProfiles = $this->mikrotik->getHotspotProfiles();
 
-        // Get counts from GEMBOK LARA
+        // Get counts from MyShezaNet
         $localCustomers = Customer::count();
         $localPackages = Package::count();
 

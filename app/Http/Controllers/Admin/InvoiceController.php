@@ -244,7 +244,7 @@ class InvoiceController extends Controller
     {
         $invoice->load(['customer', 'package']);
         $company = [
-            'name' => \App\Models\AppSetting::where('key', 'company_name')->value('value') ?? 'GEMBOK LARA',
+            'name' => \App\Models\AppSetting::where('key', 'company_name')->value('value') ?? 'MyShezaNet',
             'phone' => \App\Models\AppSetting::where('key', 'company_phone')->value('value') ?? '-',
             'email' => \App\Models\AppSetting::where('key', 'company_email')->value('value') ?? '-',
             'address' => \App\Models\AppSetting::where('key', 'company_address')->value('value') ?? '-',

@@ -1,14 +1,14 @@
 <!-- Sidebar -->
-<div class="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-to-b from-slate-900 via-blue-900 to-cyan-900 transform transition-transform duration-300 ease-in-out lg:translate-x-0" 
+<div class="fixed inset-y-0 left-0 z-50 w-64 sheza-shell sheza-network-lines transform transition-transform duration-300 ease-in-out lg:translate-x-0"
      :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'">
     
     <!-- Logo -->
-    <div class="flex items-center justify-center h-16 bg-black bg-opacity-30 border-b border-cyan-500/20">
+    <div class="flex items-center justify-center h-16 bg-black/35 border-b border-lime-400/25">
         <div class="flex items-center space-x-3">
-            <div class="h-10 w-10 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+            <div class="h-10 w-10 sheza-gradient rounded-lg flex items-center justify-center shadow-lg shadow-lime-500/30">
                 <i class="fas fa-network-wired text-white"></i>
             </div>
-            <span class="text-white font-bold text-xl tracking-wide">{{ companyName() }}</span>
+            <span class="text-white font-bold text-xl tracking-wide">My<span class="text-lime-400">ShezaNet</span></span>
         </div>
     </div>
 
@@ -16,7 +16,7 @@
     <nav class="mt-4 px-4 space-y-1 overflow-y-auto" style="max-height: calc(100vh - 180px);">
         
         <!-- Main Menu -->
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2 mt-2">Main Menu</p>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2 mt-2">Main Menu</p>
         
         <a href="{{ route('admin.dashboard') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.dashboard') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-home w-5 mr-3"></i>
@@ -48,8 +48,8 @@
         </a>
 
         <!-- Staff -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Staff</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Staff</p>
         
         <a href="{{ route('admin.technicians.index') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.technicians.*') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-tools w-5 mr-3"></i>
@@ -67,8 +67,8 @@
         </a>
         
         <!-- Network -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Network</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Network</p>
         
         <a href="{{ route('admin.olt.index') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.olt.*') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-broadcast-tower w-5 mr-3"></i>
@@ -91,8 +91,8 @@
         </a>
         
         <!-- Services -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Services</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Services</p>
         
         <a href="{{ route('admin.mikrotik.index') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.mikrotik.index') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-server w-5 mr-3"></i>
@@ -139,8 +139,8 @@
         </a>
 
         <!-- Reports -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Reports</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Reports</p>
         
         <a href="{{ route('admin.reports.index') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.reports.index') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-chart-bar w-5 mr-3"></i>
@@ -158,8 +158,8 @@
         </a>
         
         <!-- Support -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Support</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Support</p>
         
         <a href="{{ route('admin.tickets.index') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.tickets.*') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-headset w-5 mr-3"></i>
@@ -171,8 +171,8 @@
         </a>
         
         <!-- Settings -->
-        <div class="border-t border-cyan-500/20 my-3"></div>
-        <p class="px-4 text-xs text-cyan-300/60 uppercase tracking-wider mb-2">Settings</p>
+        <div class="border-t border-lime-400/20 my-3"></div>
+        <p class="px-4 text-xs text-lime-300/70 uppercase tracking-wider mb-2">Settings</p>
         
         <a href="{{ route('admin.settings.integrations') }}" class="flex items-center px-4 py-2.5 text-gray-300 hover:bg-white hover:bg-opacity-10 rounded-lg transition {{ request()->routeIs('admin.settings.integrations') || request()->routeIs('admin.settings.mikrotik*') || request()->routeIs('admin.settings.radius*') || request()->routeIs('admin.settings.genieacs*') || request()->routeIs('admin.settings.whatsapp*') || request()->routeIs('admin.settings.midtrans*') || request()->routeIs('admin.settings.xendit*') ? 'bg-white bg-opacity-20 text-white' : '' }}">
             <i class="fas fa-plug w-5 mr-3"></i>

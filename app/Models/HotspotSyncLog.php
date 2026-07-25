@@ -48,8 +48,8 @@ class HotspotSyncLog extends Model
     public function getDirectionLabelAttribute(): string
     {
         return match($this->direction) {
-            'pull' => '⬇️ Pull (Mikrotik → Gembok)',
-            'push' => '⬆️ Push (Gembok → Mikrotik)',
+            'pull' => '⬇️ Pull (Mikrotik → MyShezaNet)',
+            'push' => '⬆️ Push (MyShezaNet → Mikrotik)',
             'full' => '🔄 Full Sync',
             default => $this->direction,
         };

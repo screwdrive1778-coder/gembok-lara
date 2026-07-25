@@ -7,7 +7,7 @@
 @endpush
 
 @section('content')
-<div class="min-h-screen bg-gray-100" x-data="{ sidebarOpen: false }">
+<div class="min-h-screen bg-[#f6faf7]" x-data="{ sidebarOpen: false }">
     @include('admin.partials.sidebar')
 
     <div class="lg:pl-64">
@@ -24,7 +24,7 @@
             <!-- Stats Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
                 <!-- Total Customers -->
-                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-blue-500 hover:shadow-lg transition">
+                <div class="bg-white rounded-xl sheza-card p-6 border-l-4 border-lime-500 hover:shadow-lg transition">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Total Customers</p>
@@ -33,14 +33,14 @@
                                 <i class="fas fa-check-circle"></i> {{ $stats['active_customers'] }} active
                             </p>
                         </div>
-                        <div class="h-14 w-14 bg-blue-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                        <div class="h-14 w-14 bg-lime-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-users text-green-600 text-2xl"></i>
                         </div>
                     </div>
                 </div>
 
                 <!-- Total Revenue -->
-                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-green-500 hover:shadow-lg transition">
+                <div class="bg-white rounded-xl sheza-card p-6 border-l-4 border-green-500 hover:shadow-lg transition">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Total Revenue</p>
@@ -54,7 +54,7 @@
                 </div>
 
                 <!-- Pending Revenue -->
-                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-yellow-500 hover:shadow-lg transition">
+                <div class="bg-white rounded-xl sheza-card p-6 border-l-4 border-lime-400 hover:shadow-lg transition">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Pending Revenue</p>
@@ -70,15 +70,15 @@
                 </div>
 
                 <!-- Total Packages -->
-                <div class="bg-white rounded-xl shadow-md p-6 border-l-4 border-cyan-500 hover:shadow-lg transition">
+                <div class="bg-white rounded-xl sheza-card p-6 border-l-4 border-emerald-500 hover:shadow-lg transition">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm text-gray-600 mb-1">Total Packages</p>
                             <p class="text-3xl font-bold text-gray-900">{{ $stats['total_packages'] }}</p>
                             <p class="text-xs text-gray-500 mt-1">Active packages</p>
                         </div>
-                        <div class="h-14 w-14 bg-cyan-100 rounded-full flex items-center justify-center">
-                            <i class="fas fa-box text-cyan-600 text-2xl"></i>
+                        <div class="h-14 w-14 bg-emerald-100 rounded-full flex items-center justify-center">
+                            <i class="fas fa-box text-emerald-600 text-2xl"></i>
                         </div>
                     </div>
                 </div>
@@ -87,9 +87,9 @@
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Revenue Chart -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-chart-line mr-2 text-cyan-600"></i>
+                        <i class="fas fa-chart-line mr-2 text-green-600"></i>
                         Revenue Trend (Last 6 Months)
                     </h3>
                     <div style="height: 300px;">
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Customer Growth Chart -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
                         <i class="fas fa-user-plus mr-2 text-blue-600"></i>
                         New Customers (Last 6 Months)
@@ -112,9 +112,9 @@
             <!-- Package Distribution & Invoice Status -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
                 <!-- Package Distribution -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
-                        <i class="fas fa-chart-pie mr-2 text-cyan-600"></i>
+                        <i class="fas fa-chart-pie mr-2 text-green-600"></i>
                         Package Distribution
                     </h3>
                     <div style="height: 300px;" class="flex items-center justify-center">
@@ -123,7 +123,7 @@
                 </div>
 
                 <!-- Invoice Status -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <h3 class="text-lg font-bold text-gray-900 mb-4">
                         <i class="fas fa-file-invoice mr-2 text-blue-600"></i>
                         Invoice Status
@@ -137,13 +137,13 @@
             <!-- Recent Activity -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <!-- Recent Invoices -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">
                             <i class="fas fa-file-invoice mr-2 text-blue-600"></i>
                             Recent Invoices
                         </h3>
-                        <a href="{{ route('admin.invoices.index') }}" class="text-cyan-600 hover:text-cyan-800 text-sm font-medium">
+                        <a href="{{ route('admin.invoices.index') }}" class="text-green-600 hover:text-green-800 text-sm font-medium">
                             View All <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -168,13 +168,13 @@
                 </div>
 
                 <!-- Recent Customers -->
-                <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="bg-white rounded-xl sheza-card p-6">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-bold text-gray-900">
                             <i class="fas fa-user-plus mr-2 text-green-600"></i>
                             Recent Customers
                         </h3>
-                        <a href="{{ route('admin.customers.index') }}" class="text-cyan-600 hover:text-cyan-800 text-sm font-medium">
+                        <a href="{{ route('admin.customers.index') }}" class="text-green-600 hover:text-green-800 text-sm font-medium">
                             View All <i class="fas fa-arrow-right ml-1"></i>
                         </a>
                     </div>
@@ -182,7 +182,7 @@
                         @forelse($recent_customers as $customer)
                             <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
                                 <div class="flex items-center space-x-3">
-                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white font-bold">
+                                    <div class="h-10 w-10 rounded-full bg-gradient-to-br from-green-600 to-lime-500 flex items-center justify-center text-white font-bold">
                                         {{ strtoupper(substr($customer->name, 0, 1)) }}
                                     </div>
                                     <div>

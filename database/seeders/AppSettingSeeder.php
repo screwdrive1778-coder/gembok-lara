@@ -13,7 +13,7 @@ class AppSettingSeeder extends Seeder
     public function run(): void
     {
         $settings = [
-            ['key' => 'company_name', 'value' => 'ALIJAYA DIGITAL NETWORK'],
+            ['key' => 'company_name', 'value' => 'MyShezaNet'],
             ['key' => 'company_phone', 'value' => '081947215703'],
             ['key' => 'company_email', 'value' => 'info@alijaya.com'],
             ['key' => 'company_address', 'value' => 'Jl. Contoh Alamat No. 123'],

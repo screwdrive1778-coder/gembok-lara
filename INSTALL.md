@@ -1,10 +1,11 @@
-# 📦 Panduan Instalasi GEMBOK LARA
+# 📦 Panduan Instalasi MyShezaNet
 
 ## Pilihan Instalasi
 
 - [Quick Install (Script Otomatis)](#quick-install)
 - [Instalasi Manual (Tanpa Docker)](#instalasi-manual)
 - [Instalasi dengan Docker](#instalasi-docker)
+- [Checklist Production Ubuntu 24.04](docs/production-ubuntu-24.04-id.md)
 
 ---
 
@@ -84,7 +85,7 @@ php artisan key:generate
 Buka file `.env` dan sesuaikan konfigurasi:
 
 ```env
-APP_NAME="Arsa Net"
+APP_NAME="MyShezaNet"
 APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://yourdomain.com

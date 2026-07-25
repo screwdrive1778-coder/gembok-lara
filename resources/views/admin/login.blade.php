@@ -5,7 +5,9 @@
 @push('styles')
 <style>
     .network-bg {
-        background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0891b2 100%);
+        background:
+            radial-gradient(circle at 76% 18%, rgba(124, 255, 0, .24), transparent 18rem),
+            linear-gradient(135deg, #ffffff 0%, #f6faf7 36%, #061426 37%, #020b18 100%);
         position: relative;
         overflow: hidden;
     }
@@ -16,9 +18,10 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background-image: 
-            radial-gradient(circle at 20% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+        background-image:
+            radial-gradient(circle at 20% 50%, rgba(124, 255, 0, 0.12) 0%, transparent 48%),
+            radial-gradient(circle at 82% 78%, rgba(18, 212, 163, 0.14) 0%, transparent 42%),
+            linear-gradient(115deg, transparent 0 48%, rgba(124, 255, 0, .18) 48% 49%, transparent 49% 100%);
         animation: pulse 4s ease-in-out infinite;
     }
     @keyframes pulse {
@@ -26,9 +29,9 @@
         50% { opacity: 0.5; }
     }
     .glass-card {
-        background: rgba(255, 255, 255, 0.95);
+        background: rgba(255, 255, 255, 0.96);
         backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(27, 184, 15, 0.16);
     }
     .network-icon {
         animation: float 3s ease-in-out infinite;
@@ -47,20 +50,20 @@
         <div class="hidden lg:block text-white space-y-8">
             <div class="space-y-4">
                 <div class="flex items-center space-x-4">
-                    <div class="h-20 w-20 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center shadow-2xl network-icon">
+                    <div class="h-20 w-20 bg-gradient-to-br from-lime-400 to-green-600 rounded-2xl flex items-center justify-center shadow-2xl network-icon">
                         <i class="fas fa-network-wired text-white text-4xl"></i>
                     </div>
                     <div>
                         <h1 class="text-5xl font-bold tracking-tight">{{ companyName() }}</h1>
-                        <p class="text-cyan-200 text-lg">ISP Management System</p>
+                        <p class="text-lime-200 text-lg">ISP Management System</p>
                     </div>
                 </div>
             </div>
 
             <div class="space-y-6 mt-12">
                 <div class="flex items-start space-x-4">
-                    <div class="h-12 w-12 bg-cyan-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-users text-cyan-300 text-xl"></i>
+                    <div class="h-12 w-12 bg-lime-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-users text-lime-300 text-xl"></i>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold mb-1">Customer Management</h3>
@@ -69,8 +72,8 @@
                 </div>
 
                 <div class="flex items-start space-x-4">
-                    <div class="h-12 w-12 bg-blue-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-map-marked-alt text-blue-300 text-xl"></i>
+                    <div class="h-12 w-12 bg-emerald-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-map-marked-alt text-emerald-300 text-xl"></i>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold mb-1">Network Monitoring</h3>
@@ -79,8 +82,8 @@
                 </div>
 
                 <div class="flex items-start space-x-4">
-                    <div class="h-12 w-12 bg-indigo-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <i class="fas fa-chart-line text-indigo-300 text-xl"></i>
+                    <div class="h-12 w-12 bg-green-500/20 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-chart-line text-green-300 text-xl"></i>
                     </div>
                     <div>
                         <h3 class="text-xl font-semibold mb-1">Business Analytics</h3>
@@ -95,7 +98,7 @@
             <div class="glass-card rounded-3xl shadow-2xl p-8 lg:p-10">
                 <!-- Mobile Logo -->
                 <div class="lg:hidden text-center mb-8">
-                    <div class="mx-auto h-16 w-16 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-2xl flex items-center justify-center mb-4">
+                    <div class="mx-auto h-16 w-16 bg-gradient-to-br from-lime-400 to-green-600 rounded-2xl flex items-center justify-center mb-4">
                         <i class="fas fa-network-wired text-white text-2xl"></i>
                     </div>
                     <h2 class="text-3xl font-bold text-gray-900">{{ companyName() }}</h2>
@@ -137,7 +140,7 @@
                                 autocomplete="email" 
                                 required 
                                 value="{{ old('email') }}"
-                                class="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition"
+                                class="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
                                 placeholder="admin@gembok.com"
                             >
                         </div>
@@ -157,7 +160,7 @@
                                 type="password" 
                                 autocomplete="current-password" 
                                 required 
-                                class="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent transition"
+                                class="block w-full pl-11 pr-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent transition"
                                 placeholder="••••••••"
                             >
                         </div>
@@ -168,7 +171,7 @@
                             id="remember" 
                             name="remember" 
                             type="checkbox" 
-                            class="h-4 w-4 text-cyan-600 focus:ring-cyan-500 border-gray-300 rounded"
+                            class="h-4 w-4 text-green-600 focus:ring-lime-500 border-gray-300 rounded"
                         >
                         <label for="remember" class="ml-2 block text-sm text-gray-700">
                             Remember me for 30 days
@@ -177,7 +180,7 @@
 
                     <button 
                         type="submit" 
-                        class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl text-white font-semibold bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
+                        class="w-full flex justify-center items-center py-3.5 px-4 border border-transparent rounded-xl text-white font-semibold bg-gradient-to-r from-green-600 to-lime-500 hover:from-green-700 hover:to-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 transition-all duration-200 transform hover:scale-[1.02] shadow-lg hover:shadow-xl"
                     >
                         <i class="fas fa-sign-in-alt mr-2"></i>
                         Sign In to Dashboard
@@ -185,9 +188,9 @@
                 </form>
 
                 <!-- Default Credentials -->
-                <div class="mt-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border border-cyan-200">
+                <div class="mt-6 p-4 bg-gradient-to-r from-lime-50 to-green-50 rounded-xl border border-lime-200">
                     <div class="flex items-center justify-center text-sm">
-                        <i class="fas fa-info-circle text-cyan-600 mr-2"></i>
+                        <i class="fas fa-info-circle text-green-600 mr-2"></i>
                         <span class="text-gray-700">
                             <strong>Default:</strong> admin@gembok.com / admin123
                         </span>

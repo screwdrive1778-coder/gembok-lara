@@ -31,7 +31,7 @@
                     <div>
                         <h4 class="text-sm font-semibold text-blue-800">Panduan Fitur (Simpan Database vs Sync Mikrotik)</h4>
                         <ul class="text-sm text-blue-700 mt-1 list-disc list-inside space-y-1">
-                            <li><strong>Simpan Database (Tanpa Centang Sync):</strong> Voucher hanya dibuat dan disimpan di sistem lokal Gembok. Belum bisa digunakan login di jaringan Mikrotik.</li>
+                            <li><strong>Simpan Database (Tanpa Centang Sync):</strong> Voucher hanya dibuat dan disimpan di sistem lokal MyShezaNet. Belum bisa digunakan login di jaringan Mikrotik.</li>
                             <li><strong>Sync ke Mikrotik (Dicentang):</strong> Data voucher akan langsung dikirim (Push) ke router Mikrotik sehingga pelanggan bisa langsung menggunakannya. <em>(Proses ini mungkin membutuhkan waktu sedikit lebih lama tergantung jumlah voucher yang dibuat).</em></li>
                         </ul>
                     </div>
