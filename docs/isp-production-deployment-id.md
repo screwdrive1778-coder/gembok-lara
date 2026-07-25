@@ -249,7 +249,386 @@ Gunakan checklist ini sebelum membuka traffic produksi:
 - [ ] Runbook incident, rollback, dan DR tersedia.
 - [ ] Tim operasional sudah menjalankan simulasi incident.
 
-## 14. Runbook incident singkat
+
+## 14. Instalasi step-by-step di Ubuntu Server 24.04 LTS
+
+> Catatan: Ubuntu tidak merilis versi LTS bernama 24.05. Jika server Anda tertulis 24.05, verifikasi dulu dengan `lsb_release -a`. Panduan ini diasumsikan untuk Ubuntu Server 24.04 LTS karena itulah rilis produksi Ubuntu 24.x yang umum digunakan.
+
+Bagian ini memakai pendekatan production-grade berbasis paket OS, systemd, Nginx reverse proxy, Java runtime, dan MySQL/MariaDB. Untuk cluster serius, database managed atau cluster eksternal tetap lebih disarankan daripada database tunggal di VM yang sama.
+
+### 14.1. Variabel yang harus Anda tetapkan
+
+Ganti nilai berikut sesuai environment Anda sebelum menjalankan perintah:
+
+```bash
+export KILLBILL_VERSION="PIN_VERSI_RILIS_KILLBILL"
+export KILLBILL_HOSTNAME="billing.example.net"
+export DB_HOST="127.0.0.1"
+export DB_NAME="killbill"
+export DB_APP_USER="killbill_app"
+export DB_MIGRATION_USER="killbill_migration"
+export KB_RUNTIME_USER="killbill"
+```
+
+Jangan menaruh password di shell history. Buat password dengan secret manager atau minimal `openssl rand -base64 48`, lalu masukkan melalui prompt interaktif atau file environment yang permission-nya dikunci.
+
+### 14.2. Update OS dan paket dasar
+
+```bash
+sudo apt update
+sudo apt -y full-upgrade
+sudo apt -y install \
+  ca-certificates curl wget gnupg lsb-release unzip jq vim less \
+  chrony openssl ufw fail2ban acl logrotate \
+  openjdk-17-jre-headless nginx mariadb-server mariadb-client
+sudo reboot
+```
+
+Setelah reboot:
+
+```bash
+lsb_release -a
+java -version
+systemctl status chrony --no-pager
+```
+
+### 14.3. Hardening user, direktori, dan permission
+
+```bash
+sudo useradd --system --home /var/lib/killbill --shell /usr/sbin/nologin killbill
+sudo install -d -o killbill -g killbill -m 0750 /var/lib/killbill
+sudo install -d -o killbill -g killbill -m 0750 /var/log/killbill
+sudo install -d -o killbill -g killbill -m 0750 /opt/killbill
+sudo install -d -o root -g killbill -m 0750 /etc/killbill
+```
+
+Buat file secret runtime:
+
+```bash
+sudo install -o root -g killbill -m 0640 /dev/null /etc/killbill/killbill.env
+sudoedit /etc/killbill/killbill.env
+```
+
+Isi minimal:
+
+```bash
+KILLBILL_DAO_URL=jdbc:mysql://127.0.0.1:3306/killbill?useSSL=true&serverTimezone=UTC&allowPublicKeyRetrieval=false
+KILLBILL_DAO_USER=killbill_app
+KILLBILL_DAO_PASSWORD=GANTI_DENGAN_SECRET_DB_APP
+KILLBILL_SERVER_TEST_MODE=false
+JAVA_OPTS=-Xms4g -Xmx4g -XX:+UseG1GC -Dfile.encoding=UTF-8 -Duser.timezone=UTC
+```
+
+### 14.4. Konfigurasi firewall host
+
+Jika server berada di belakang load balancer, batasi port 80/443 hanya dari load balancer. Contoh baseline:
+
+```bash
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow OpenSSH
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw enable
+sudo ufw status verbose
+```
+
+Untuk produksi, ganti rule SSH menjadi hanya dari IP VPN/bastion:
+
+```bash
+sudo ufw delete allow OpenSSH
+sudo ufw allow from IP_VPN_ATAU_BASTION to any port 22 proto tcp
+```
+
+### 14.5. Hardening MariaDB/MySQL
+
+Jalankan hardening awal:
+
+```bash
+sudo mysql_secure_installation
+```
+
+Buat database, user migrasi, dan user runtime. Gunakan password kuat yang berbeda untuk masing-masing user.
+
+```bash
+sudo mysql
+```
+
+```sql
+CREATE DATABASE killbill CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'killbill_migration'@'localhost' IDENTIFIED BY 'GANTI_PASSWORD_MIGRASI';
+CREATE USER 'killbill_app'@'localhost' IDENTIFIED BY 'GANTI_PASSWORD_RUNTIME';
+GRANT ALL PRIVILEGES ON killbill.* TO 'killbill_migration'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE ON killbill.* TO 'killbill_app'@'localhost';
+FLUSH PRIVILEGES;
+```
+
+Tambahkan konfigurasi database produksi:
+
+```bash
+sudo tee /etc/mysql/mariadb.conf.d/60-killbill-production.cnf >/dev/null <<'EOF_DB'
+[mysqld]
+bind-address=127.0.0.1
+max_connections=300
+innodb_buffer_pool_size=8G
+innodb_flush_log_at_trx_commit=1
+innodb_file_per_table=1
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+default-time-zone='+00:00'
+slow_query_log=ON
+long_query_time=1
+log_queries_not_using_indexes=OFF
+EOF_DB
+sudo systemctl restart mariadb
+sudo systemctl status mariadb --no-pager
+```
+
+Sesuaikan `innodb_buffer_pool_size` sekitar 50-70% RAM server database bila database berada di host khusus. Jangan memakai angka `8G` begitu saja pada server kecil.
+
+### 14.6. Instal artifact Kill Bill dengan versi yang dipin
+
+Gunakan artifact resmi atau artifact internal yang sudah Anda build dan scan. Jangan gunakan URL contoh tanpa memverifikasi checksum dan provenance.
+
+Contoh alur aman:
+
+```bash
+sudo install -d -o root -g root -m 0755 /opt/killbill/releases
+cd /tmp
+# Unduh artifact versi yang sudah dipin dari repository resmi/internal Anda.
+# wget https://ARTIFACT_REPOSITORY/killbill-${KILLBILL_VERSION}.war
+# wget https://ARTIFACT_REPOSITORY/killbill-${KILLBILL_VERSION}.war.sha256
+# sha256sum -c killbill-${KILLBILL_VERSION}.war.sha256
+sudo install -o root -g root -m 0644 killbill-${KILLBILL_VERSION}.war /opt/killbill/releases/killbill-${KILLBILL_VERSION}.war
+sudo ln -sfn /opt/killbill/releases/killbill-${KILLBILL_VERSION}.war /opt/killbill/killbill.war
+```
+
+Jika artifact belum tersedia, build di CI/CD atau build host terpisah, bukan di server produksi. Server produksi sebaiknya hanya menerima artifact final yang sudah ditandatangani/diverifikasi.
+
+### 14.7. Service systemd Kill Bill
+
+Buat unit systemd. Sesuaikan command `ExecStart` dengan packaging Kill Bill yang Anda gunakan; contoh berikut mengasumsikan artifact runnable atau launcher internal Anda dapat menjalankan WAR secara langsung. Jika deployment Anda memakai Tomcat, pasang WAR ke direktori Tomcat dan letakkan hardening JVM/environment di unit Tomcat.
+
+```bash
+sudo tee /etc/systemd/system/killbill.service >/dev/null <<'EOF_SYSTEMD'
+[Unit]
+Description=Kill Bill Billing API
+After=network-online.target mariadb.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=killbill
+Group=killbill
+EnvironmentFile=/etc/killbill/killbill.env
+WorkingDirectory=/var/lib/killbill
+ExecStart=/usr/bin/java $JAVA_OPTS -jar /opt/killbill/killbill.war
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+LimitNOFILE=65535
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/killbill /var/log/killbill /tmp
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target
+EOF_SYSTEMD
+sudo systemctl daemon-reload
+sudo systemctl enable killbill
+```
+
+Sebelum start produksi, pastikan migrasi schema sudah dijalankan sesuai mekanisme rilis yang Anda pilih. Jalankan migrasi dengan user `killbill_migration`, lalu jalankan aplikasi dengan user `killbill_app`.
+
+```bash
+sudo systemctl start killbill
+sudo systemctl status killbill --no-pager
+journalctl -u killbill -n 200 --no-pager
+```
+
+### 14.8. Nginx reverse proxy dengan header keamanan
+
+Pasang sertifikat TLS dari CA tepercaya, misalnya melalui ACME/Let’s Encrypt atau sertifikat perusahaan. Contoh server block:
+
+```bash
+sudo tee /etc/nginx/sites-available/killbill.conf >/dev/null <<'EOF_NGINX'
+server {
+    listen 80;
+    server_name billing.example.net;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name billing.example.net;
+
+    ssl_certificate /etc/ssl/certs/billing.example.net.crt;
+    ssl_certificate_key /etc/ssl/private/billing.example.net.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_prefer_server_ciphers off;
+
+    client_max_body_size 2m;
+    proxy_connect_timeout 10s;
+    proxy_send_timeout 60s;
+    proxy_read_timeout 60s;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header X-Frame-Options DENY always;
+    add_header Referrer-Policy no-referrer always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    location / {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+    }
+}
+EOF_NGINX
+sudo ln -sfn /etc/nginx/sites-available/killbill.conf /etc/nginx/sites-enabled/killbill.conf
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+Untuk production multi-node, konfigurasi TLS dan rate limit idealnya berada di load balancer/WAF terpusat, lalu Nginx host hanya menerima traffic dari load balancer.
+
+### 14.9. Rate limiting dan fail2ban baseline
+
+Tambahkan rate limit Nginx untuk mengurangi brute force dan abuse API:
+
+```bash
+sudo tee /etc/nginx/conf.d/killbill-rate-limit.conf >/dev/null <<'EOF_RATE'
+limit_req_zone $binary_remote_addr zone=kb_api:10m rate=10r/s;
+EOF_RATE
+```
+
+Tambahkan di blok `location /` sebelum `proxy_pass`:
+
+```nginx
+limit_req zone=kb_api burst=50 nodelay;
+```
+
+Validasi dan reload:
+
+```bash
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+### 14.10. Backup dan restore database
+
+Contoh backup harian terenkripsi dengan retensi lokal singkat. Untuk produksi, kirim hasil backup ke object storage terenkripsi dan aktifkan PITR/binlog.
+
+```bash
+sudo install -d -o root -g root -m 0700 /var/backups/killbill
+sudo tee /usr/local/sbin/backup-killbill-db.sh >/dev/null <<'EOF_BACKUP'
+#!/usr/bin/env bash
+set -euo pipefail
+DATE="$(date -u +%Y%m%dT%H%M%SZ)"
+OUT="/var/backups/killbill/killbill-${DATE}.sql.gz"
+mysqldump --single-transaction --routines --triggers --events killbill | gzip -9 > "${OUT}"
+chmod 0600 "${OUT}"
+find /var/backups/killbill -type f -name 'killbill-*.sql.gz' -mtime +7 -delete
+EOF_BACKUP
+sudo chmod 0750 /usr/local/sbin/backup-killbill-db.sh
+sudo tee /etc/systemd/system/backup-killbill-db.service >/dev/null <<'EOF_BSVC'
+[Unit]
+Description=Backup Kill Bill database
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/backup-killbill-db.sh
+EOF_BSVC
+sudo tee /etc/systemd/system/backup-killbill-db.timer >/dev/null <<'EOF_BTMR'
+[Unit]
+Description=Run Kill Bill DB backup daily
+
+[Timer]
+OnCalendar=*-*-* 02:15:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+EOF_BTMR
+sudo systemctl daemon-reload
+sudo systemctl enable --now backup-killbill-db.timer
+systemctl list-timers --all | grep backup-killbill
+```
+
+Uji restore ke server staging:
+
+```bash
+gunzip -c /var/backups/killbill/killbill-YYYYMMDDTHHMMSSZ.sql.gz | mysql killbill_restore
+```
+
+Backup yang belum pernah diuji restore belum boleh dianggap valid.
+
+### 14.11. Monitoring wajib sebelum go-live
+
+Minimal pasang node exporter dan database exporter sesuai stack monitoring Anda. Jika memakai Prometheus, baseline yang wajib dipantau:
+
+- `systemd` status `killbill`, `nginx`, dan `mariadb`.
+- CPU, RAM, disk, inode, network, dan file descriptor.
+- JVM heap, GC pause, thread count, dan HTTP latency.
+- Database connection, lock wait, slow query, disk growth, dan backup age.
+- Metrik bisnis: invoice generated, payment failure, overdue account, suspended account, dan provisioning failure.
+
+Tambahkan alert produksi sebelum go-live:
+
+```text
+- Kill Bill service down > 1 menit
+- HTTP 5xx > 1% selama 5 menit
+- p95 latency API > 2 detik selama 10 menit
+- Disk database > 80%
+- Backup terakhir > 26 jam
+- Payment callback failure naik tajam dari baseline
+```
+
+### 14.12. Verifikasi smoke test setelah service aktif
+
+Jalankan dari jaringan admin, bukan dari internet publik:
+
+```bash
+curl -k -I https://${KILLBILL_HOSTNAME}/
+systemctl is-active killbill
+systemctl is-active nginx
+systemctl is-active mariadb
+journalctl -u killbill -p err -n 50 --no-pager
+```
+
+Lanjutkan dengan test bisnis melalui API atau tool internal:
+
+1. Buat tenant test.
+2. Buat account test.
+3. Buat subscription paket ISP termurah.
+4. Generate invoice test.
+5. Simulasikan pembayaran sukses dan gagal di gateway sandbox.
+6. Pastikan event provisioning suspend/resume tidak ganda saat retry.
+7. Hapus atau tutup data test sesuai prosedur audit.
+
+### 14.13. Checklist produksi final di Ubuntu
+
+- [ ] Versi Ubuntu terverifikasi sebagai 24.04 LTS atau versi LTS yang didukung.
+- [ ] Semua paket OS sudah update dan reboot terakhir sudah selesai.
+- [ ] Java runtime sesuai versi Kill Bill yang dipakai.
+- [ ] Artifact Kill Bill dipin, checksum diverifikasi, dan tidak menggunakan tag `latest`.
+- [ ] Service berjalan sebagai user non-login `killbill`.
+- [ ] Secret berada di `/etc/killbill/killbill.env` dengan permission `0640` atau di secret manager.
+- [ ] Database memakai user migrasi dan user runtime terpisah.
+- [ ] Database hanya bind ke jaringan privat atau localhost.
+- [ ] Firewall hanya membuka port yang diperlukan.
+- [ ] HTTPS aktif dengan sertifikat valid.
+- [ ] Rate limit aktif di Nginx/load balancer/WAF.
+- [ ] Backup timer aktif dan restore sudah diuji di staging.
+- [ ] Monitoring dan alert sudah mengirim notifikasi ke tim operasional.
+- [ ] Smoke test teknis dan skenario billing ISP selesai tanpa error.
+
+## 15. Runbook incident singkat
 
 ### Dugaan SQL injection atau abuse API
 
@@ -269,7 +648,7 @@ Gunakan checklist ini sebelum membuka traffic produksi:
 3. Jalankan rekonsiliasi berbasis idempotency key dan external payment ID.
 4. Pulihkan backlog secara bertahap setelah penyebab diperbaiki.
 
-## 15. Prinsip stabilitas operasional
+## 16. Prinsip stabilitas operasional
 
 - Jangan melakukan perubahan manual langsung di database produksi kecuali melalui runbook yang disetujui.
 - Jangan deploy perubahan catalog besar tanpa simulasi invoice massal.
